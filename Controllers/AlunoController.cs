@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ExemploEntityFramework.Models;
+using ExemploEF.DTO;
 
 namespace ExemploEF.Controllers
 {
@@ -38,11 +39,23 @@ namespace ExemploEF.Controllers
 
             return aluno;
         }
-        
+
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAluno(int id, Aluno aluno)
+        public async Task<IActionResult> PutAluno(int id, AlunoDTO alunoDTO)
         {
-            aluno.RA = id;
+            var aluno = await _context.Aluno.FindAsync(id);
+            if (aluno == null)
+            {
+                return NotFound();
+            }
+
+            aluno.Nome = alunoDTO.Nome;
+            aluno.Rua = alunoDTO.Rua;
+            aluno.Numero = alunoDTO.Numero;
+            aluno.Bairro = alunoDTO.Bairro;
+            aluno.Cidade = alunoDTO.Cidade;
+            aluno.Estado = alunoDTO.Estado;
+            aluno.Curso = alunoDTO.Curso;
 
             _context.Entry(aluno).State = EntityState.Modified;
 
@@ -50,24 +63,28 @@ namespace ExemploEF.Controllers
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException) when (!AlunoExists(id))
             {
-                if (!AlunoExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
             }
 
             return NoContent();
         }
 
         [HttpPost]
-        public async Task<ActionResult<Aluno>> PostAluno(Aluno aluno)
+        public async Task<ActionResult<AlunoDTO>> PostAluno(AlunoDTO alunoDTO)
         {
+            var aluno = new Aluno
+            {
+                Nome = alunoDTO.Nome,
+                Rua = alunoDTO.Rua,
+                Numero = alunoDTO.Numero,
+                Bairro = alunoDTO.Bairro,
+                Cidade = alunoDTO.Cidade,
+                Estado = alunoDTO.Estado,
+                Curso = alunoDTO.Curso
+            };
+
             _context.Aluno.Add(aluno);
             await _context.SaveChangesAsync();
 

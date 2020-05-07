@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ExemploEntityFramework.Models;
+using ExemploEF.DTO;
 
 namespace ExemploEF.Controllers
 {
@@ -40,9 +41,21 @@ namespace ExemploEF.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProfessor(int id, Professor professor)
+        public async Task<IActionResult> PutProfessor(int id, ProfessorDTO professorDTO)
         {
-            professor.Id = id;
+            var professor = await _context.Professor.FindAsync(id);
+            if (professor == null)
+            {
+                return NotFound();
+            }
+
+            professor.Nome = professorDTO.Nome;
+            professor.Rua = professorDTO.Rua;
+            professor.Numero = professorDTO.Numero;
+            professor.Bairro = professorDTO.Bairro;
+            professor.Cidade = professorDTO.Cidade;
+            professor.Estado = professorDTO.Estado;
+            professor.Especialidade = professorDTO.Especialidade;
 
             _context.Entry(professor).State = EntityState.Modified;
 
@@ -50,24 +63,28 @@ namespace ExemploEF.Controllers
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException) when (!ProfessorExists(id))
             {
-                if (!ProfessorExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
             }
 
             return NoContent();
         }
 
         [HttpPost]
-        public async Task<ActionResult<Professor>> PostProfessor(Professor professor)
+        public async Task<ActionResult<ProfessorDTO>> PostProfessor(ProfessorDTO professorDTO)
         {
+            var professor = new Professor
+            {
+                Nome = professorDTO.Nome,
+                Rua = professorDTO.Rua,
+                Numero = professorDTO.Numero,
+                Bairro = professorDTO.Bairro,
+                Cidade = professorDTO.Cidade,
+                Estado = professorDTO.Estado,
+                Especialidade = professorDTO.Especialidade
+            };
+
             _context.Professor.Add(professor);
             await _context.SaveChangesAsync();
 
