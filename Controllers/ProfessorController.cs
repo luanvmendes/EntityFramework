@@ -24,6 +24,12 @@ namespace ExemploEF.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Professor>>> GetProfessor()
         {
+            if (_context.Professor.Count() == 0)
+            {
+                //retorna NotFound caso não haja registros no banco
+                return NotFound();
+            }
+
             return await _context.Professor.ToListAsync();
         }
 
