@@ -11,40 +11,40 @@ namespace ExemploEF.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AlunoController : ControllerBase
+    public class ProfessorController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
-        public AlunoController(ApplicationDbContext context)
+        public ProfessorController(ApplicationDbContext context)
         {
             _context = context;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Aluno>>> GetAluno()
+        public async Task<ActionResult<IEnumerable<Professor>>> GetProfessor()
         {
-            return await _context.Aluno.ToListAsync();
+            return await _context.Professor.ToListAsync();
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Aluno>> GetAluno(int id)
+        public async Task<ActionResult<Professor>> GetProfessor(int id)
         {
-            var aluno = await _context.Aluno.FindAsync(id);
+            var professor = await _context.Professor.FindAsync(id);
 
-            if (aluno == null)
+            if (professor == null)
             {
                 return NotFound();
             }
 
-            return aluno;
+            return professor;
         }
-        
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutAluno(int id, Aluno aluno)
-        {
-            aluno.RA = id;
 
-            _context.Entry(aluno).State = EntityState.Modified;
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutProfessor(int id, Professor professor)
+        {
+            professor.Id = id;
+
+            _context.Entry(professor).State = EntityState.Modified;
 
             try
             {
@@ -52,7 +52,7 @@ namespace ExemploEF.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!AlunoExists(id))
+                if (!ProfessorExists(id))
                 {
                     return NotFound();
                 }
@@ -66,32 +66,32 @@ namespace ExemploEF.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Aluno>> PostAluno(Aluno aluno)
+        public async Task<ActionResult<Professor>> PostProfessor(Professor professor)
         {
-            _context.Aluno.Add(aluno);
+            _context.Professor.Add(professor);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetAluno", new { id = aluno.RA }, aluno);
+            return CreatedAtAction("GetProfessor", new { id = professor.Id }, professor);
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Aluno>> DeleteAluno(int id)
+        public async Task<ActionResult<Professor>> DeleteProfessor(int id)
         {
-            var aluno = await _context.Aluno.FindAsync(id);
-            if (aluno == null)
+            var professor = await _context.Professor.FindAsync(id);
+            if (professor == null)
             {
                 return NotFound();
             }
 
-            _context.Aluno.Remove(aluno);
+            _context.Professor.Remove(professor);
             await _context.SaveChangesAsync();
 
-            return aluno;
+            return professor;
         }
 
-        private bool AlunoExists(int id)
+        private bool ProfessorExists(int id)
         {
-            return _context.Aluno.Any(e => e.RA == id);
+            return _context.Professor.Any(e => e.Id == id);
         }
     }
 }

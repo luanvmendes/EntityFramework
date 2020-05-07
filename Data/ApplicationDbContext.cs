@@ -13,5 +13,6 @@ using ExemploEntityFramework.Models;
         }
 
         public DbSet<Aluno> Aluno { get; set; }
-        public DbSet<Endereco> Endereco { get; set; }
+
+        public DbSet<ExemploEntityFramework.Models.Professor> Professor { get; set; }
     }

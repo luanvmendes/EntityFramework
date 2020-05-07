@@ -1,14 +1,11 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ExemploEntityFramework.Models
 {
-    public class Aluno
+    public class Aluno : Pessoa
     {
         [Key]
         public int RA { get; set; }
-        public string Nome { get; set; }
-        public Endereco Endereco { get; set; }
-
+        public string Curso { get; set; }
     }
 }

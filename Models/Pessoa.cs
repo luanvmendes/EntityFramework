@@ -1,8 +1,8 @@
 namespace ExemploEntityFramework.Models
 {
-    public class Endereco
+    public class Pessoa
     {
-        public int Id { get; set; }
+        public string Nome { get; set; }
         public string Rua { get; set; }
         public int Numero { get; set; }
         public string Bairro { get; set; }
