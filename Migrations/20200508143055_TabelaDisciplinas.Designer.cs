@@ -3,42 +3,22 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ExemploEF.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200508143055_TabelaDisciplinas")]
+    partial class TabelaDisciplinas
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("ExemploEF.Models.Aluno_Disciplina", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("AlunoRA")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("DisciplinaId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AlunoRA");
-
-                    b.HasIndex("DisciplinaId");
-
-                    b.ToTable("Aluno_Disciplina");
-                });
 
             modelBuilder.Entity("ExemploEF.Models.Disciplinas", b =>
                 {
@@ -124,17 +104,6 @@ namespace ExemploEF.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Professor");
-                });
-
-            modelBuilder.Entity("ExemploEF.Models.Aluno_Disciplina", b =>
-                {
-                    b.HasOne("ExemploEntityFramework.Models.Aluno", "Aluno")
-                        .WithMany()
-                        .HasForeignKey("AlunoRA");
-
-                    b.HasOne("ExemploEF.Models.Disciplinas", "Disciplina")
-                        .WithMany()
-                        .HasForeignKey("DisciplinaId");
                 });
 
             modelBuilder.Entity("ExemploEF.Models.Disciplinas", b =>

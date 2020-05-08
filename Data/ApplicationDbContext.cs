@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ExemploEntityFramework.Models;
+using ExemploEF.Models;
 
     public class ApplicationDbContext : DbContext
     {
@@ -14,5 +15,9 @@ using ExemploEntityFramework.Models;
 
         public DbSet<Aluno> Aluno { get; set; }
 
-        public DbSet<ExemploEntityFramework.Models.Professor> Professor { get; set; }
+        public DbSet<Professor> Professor { get; set; }
+
+        public DbSet<Disciplinas> Disciplinas { get; set; }
+
+        public DbSet<Aluno_Disciplina> Aluno_Disciplina { get; set; }
     }
