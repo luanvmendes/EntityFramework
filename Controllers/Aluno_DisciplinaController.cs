@@ -24,11 +24,21 @@ namespace ExemploEF.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Aluno_Disciplina>>> GetAluno_Disciplina()
         {
-            return await _context.Aluno_Disciplina
-                .Include(d => d.Disciplina)
-                .Include(a => a.Aluno)
-                .Include(p => p.Disciplina.Professor)
-                .ToListAsync();
+            //retorno com include (Retornando todos os dados das tabelas)
+            // return await _context.Aluno_Disciplina
+            //     .Include(d => d.Disciplina)
+            //     .Include(a => a.Aluno)
+            //     .Include(p => p.Disciplina.Professor)
+            //     .ToListAsync();
+
+            //retorno con Join (Retornando apenas o RA do aluno, o nome da disciplina e o nome do professor)
+            return Ok(await _context.Aluno
+                    .Join(_context.Aluno_Disciplina, PK => PK.RA, FK => FK.Aluno.RA, (PK,FK) => new 
+                    {
+                        PK.RA,
+                        Disciplina = FK.Disciplina.Nome,
+                        Professor = FK.Disciplina.Professor.Nome
+                    }).ToListAsync());
         }
         
         [HttpPut("{id}")]
@@ -79,7 +89,10 @@ namespace ExemploEF.Controllers
 
             var aluno_Disciplina = new Aluno_Disciplina
             {
-                Disciplina = _context.Disciplinas.Find(aluno_DisciplinaDTO.Disciplina),
+                Disciplina = _context.Disciplinas
+                        .Include(p => p.Professor)
+                        .Where(d => d.Id == aluno_DisciplinaDTO.Disciplina)
+                        .First(),
                 Aluno = _context.Aluno.Find(aluno_DisciplinaDTO.Aluno)
             };
 
@@ -92,7 +105,11 @@ namespace ExemploEF.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Aluno_Disciplina>> DeleteAluno_Disciplina(int id)
         {
-            var aluno_Disciplina = await _context.Aluno_Disciplina.FindAsync(id);
+            var aluno_Disciplina = await _context.Aluno_Disciplina
+                        .Include(a => a.Aluno)
+                        .Include(d => d.Disciplina)
+                        .Include(p => p.Disciplina.Professor)
+                        .Where(cod => cod.Id == id).FirstAsync();
             if (aluno_Disciplina == null)
             {
                 return NotFound();
